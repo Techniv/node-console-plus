@@ -1,0 +1,35 @@
+{
+	"name": "console-plus",
+	"description": "",
+	"version": "0.0.0-dev",
+
+	"authors":{
+		"name": "Vincent Peybernes",
+		"email": "vpeybernes.pro@gmail.com",
+		"url": "https://plus.google.com/117597625821202130678?rel=author"
+	},
+
+	"license": "MIT",
+	"homepage": "https://github.com/Techniv/node-console-plus",
+	"bugs": {"url": "https://github.com/Techniv/node-console-plus/issues"},
+	"keywords": ["console", "tty", "stdin", "stdout"],
+
+	"repository":{
+		"type": "git",
+		"url": "https://github.com/Techniv/node-console-plus.git"
+	},
+
+	"main": "libs/console.js",
+
+	"engine": {"node": "0.10.x"},
+
+	"dependencies": {
+		"colors": "0.6.x"
+	},
+
+	"devDependencies": {
+		"grunt": "*",
+		"grunt-contrib-nodeunit": "*",
+		"nodeunit": "*"
+	}
+}
