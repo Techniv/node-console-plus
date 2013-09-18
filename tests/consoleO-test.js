@@ -4,7 +4,7 @@
  * Creation date: 18/09/13
  */
 
-var consoleO = require('../libs/consoleO.js');
+var consoleO = require(__dirname+'../libs/consoleO.js');
 
 var format = function(){
 	var r = 'Format: ';
