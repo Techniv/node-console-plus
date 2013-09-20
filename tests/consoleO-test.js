@@ -45,16 +45,13 @@ module.exports = {
 
 	, listenersExecution: function(test){
 		var listener1 = function listener1(){
-			console.log('listner1');
 			test.ok(true);
 		};
 		var listener2 = function listener2(){
-			console.log('listner2');
 			test.ok(true);
 		};
 
 		var method = consoleO('method', function(){
-			console.log('method');
 			test.ok(true);
 		});
 
@@ -88,6 +85,69 @@ module.exports = {
 		method.format = format;
 		method(1,2,3,'test');
 
+		test.done();
+	}
+
+	, filters: function(test){
+		var expectedArgs = [1,2,3,'toto'];
+		var filter = function(args){
+			test.ok(Array.isArray(args));
+			for( var i in args ){
+				test.equal(args[i], expectedArgs[i]);
+			}
+		}
+
+		var method = consoleO('name', function(){});
+
+		test.expect(expectedArgs.length+1);
+
+		method.addFilter(filter);
+		method.addFilter(filter);
+		method.removeFilter(filter);
+		method.apply(this,expectedArgs);
+
+		test.done();
+	}
+
+	, filterArgOperation: function(test){
+		var args = [1,2,3,'toto'];
+		var expectedArgs = [2,4,6,'toto'];
+		var filter = function(args){
+			for( var i in args ){
+				args[i] = Number.isFinite(args[i]) ? args[i]*2 : args[i];
+			}
+		}
+
+		var method = consoleO('method', function(){
+			for( var i in arguments ){
+				test.equal(arguments[i], expectedArgs[i]);
+			}
+		});
+
+		test.expect(expectedArgs.length);
+
+		method.addFilter(filter);
+		method.apply(this, args);
+
+		test.done();
+	}
+
+	, filterInteruption: function(test){
+		var filter = function(){
+			test.ok(true);
+			return false;
+		}
+		var method = consoleO('method', function(){
+			test.ok(true);
+		});
+
+		test.expect(1);
+
+		method.addFilter(filter);
+		method.addFilter(filter);
+		method.addListener(filter);
+
+		method();
 		test.done();
 	}
 };
