@@ -21,8 +21,17 @@ module.exports = function consoleO(name, action, emitter){
 		var returnValue, args, filterSuccess;
 
 		// Prepare arguments
-		args = convertArguments(arguments);
-		if(typeof format == 'function') args = format.apply(method, args);
+		args = convertArguments(arguments, method);
+		if(typeof format == 'function'){
+			var formatArgs = format.apply(args, args);
+			if(formatArgs){
+				if(!Array.isArray(formatArgs) || formatArgs.callee != args.callee){
+					args = convertArguments(formatArgs, args.callee);
+				} else {
+					args = formatArgs;
+				}
+			}
+		}
 		if( typeof args.callee == 'undefined' && ! Array.isArray(args)) args = (typeof args == 'undefined') ? [] : [args];
 
 		// Execute filter.
@@ -97,17 +106,22 @@ module.exports = function consoleO(name, action, emitter){
 };
 
 
-function convertArguments(args){
+function convertArguments(args, callee){
 	var returnArgs = [];
-	for(var i in args){
-		returnArgs.push(args[i]);
+
+	if(args.callee){
+		for(var i in args){
+			returnArgs.push(args[i]);
+		}
+	} else {
+		returnArgs.push(args);
 	}
 
 	Object.defineProperty(returnArgs, 'callee', {
 		configurable: false,
 		writable: false,
 		enumerable: false,
-		value: args.callee
+		value: (callee)? callee : (args.callee)? args.callee : undefined
 	});
 
 	return returnArgs;
